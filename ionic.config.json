@@ -1,0 +1,7 @@
+{
+  "name": "toBuy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
