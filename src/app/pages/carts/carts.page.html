@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Carts</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let cart of carts">
+      <ion-item class="item">
+        <div class="main">
+          <div *ngIf="cart.description" class="full-content">
+            <ion-label class="name">{{cart.name}}</ion-label>
+            <div class="details">
+              <ion-label class="descr">{{cart.description}}</ion-label>
+              <ion-label class="value">R$ 0,00</ion-label>
+            </div>
+          </div>
+          <div *ngIf="!cart.description" class="incomplete-content">
+            <ion-label class="name">{{cart.name}}</ion-label>
+            <ion-label class="value">R$ 0,00</ion-label>
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item-options side="start" color="danger">
+        <ion-icon class="icon-options" (click)="deleteById(cart.id)" name="trash-outline"></ion-icon>
+        <ion-icon class="icon-options" (click)="updateCart(cart)" name="create-outline" color="primary"></ion-icon>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add" (click)="addCart()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -6,13 +6,24 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/Archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/Trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
+    { title: 'Home', url: '/home', icon: 'home' },
+    { title: 'Current cart', url: '/currentcart', icon: 'bag-handle' },
+    { title: 'Carts', url: '/carts', icon: 'albums' },
+    { title: 'settings', url: '/settings', icon: 'settings' },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+  constructor() {
+    let storagePreferences = localStorage.getItem("preferences");
+    if (storagePreferences != null){
+      let pref = JSON.parse(storagePreferences);
+      if(pref.darkMode){
+        document.body.setAttribute('data-theme', 'dark');
+      }
+      else{
+        document.body.setAttribute('data-theme', 'light');
+      }
+    }
+  }
+
+
 }
