@@ -4,5 +4,6 @@ export interface ProductInterface {
     description: string;
     qtd: number;
     value: number;
+    inCart: number;
     idCart: number;
 }

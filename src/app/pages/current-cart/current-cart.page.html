@@ -3,10 +3,52 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>CurrentCart</ion-title>
+    <ion-item>
+      <ion-select class="m-select" value="carts[0] ? carts[0].id" okText="Okay" cancelText="Dismiss">
+        <ion-select-option *ngFor="let cart of carts" value="cart.id">cart.name</ion-select-option>
+      </ion-select>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="content-main">
+
+  <ion-list>
+    <ion-list-header>
+      <ion-segment class="m-segment" value="to_buy" mode="ios" (ionChange)="segmentChanged($event)">
+        <ion-segment-button value="to_buy">
+          <ion-label>To Buy</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="in_cart">
+          <ion-label>In Cart</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-list-header>
+    <ion-item *ngFor="let product of products" ngIf="!product.inCart && segmentActive === 'to_buy'">
+      <ion-label>product.name</ion-label>
+      <ion-radio slot="end"></ion-radio>
+    </ion-item>
+    <ion-item *ngFor="let product of products" ngIf="product.inCart && segmentActive === 'in_cart'">
+      <ion-label>product.description</ion-label>
+      <ion-radio slot="end"></ion-radio>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
+
+<ion-footer>
+  <div class="input-product" *ngIf="segmentActive === 'to_buy'">
+    <ion-icon name="chevron-up-outline" *ngIf="!expandOptions" (click)="expand()"></ion-icon>
+    <ion-icon name="chevron-down-outline" *ngIf="expandOptions" (click)="expand()"></ion-icon>
+    <div class="inputs">
+      <ion-input (keyup.enter)="keytab($event)" placeholder="Product name"></ion-input>
+      <div *ngIf="expandOptions">
+        <ion-input (keyup.enter)="keytab($event)" type="text" placeholder="Product description"></ion-input>
+        <ion-input (keyup.enter)="keytab($event)" type="number" placeholder="Value"></ion-input>
+      </div>
+    </div>
+    <ion-button color="success">
+      <ion-icon class="btn-add" name="add-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-footer>

@@ -1,3 +1,4 @@
+import { DbService } from 'src/app/services/db.service';
 import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
@@ -12,7 +13,12 @@ export class AppComponent {
     { title: 'settings', url: '/settings', icon: 'settings' },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {
+  constructor(private dbInstance: DbService) {
+
+    this.dbInstance.createDatabase();
+
+
+    // corrigir depois
     let storagePreferences = localStorage.getItem("preferences");
     if (storagePreferences != null){
       let pref = JSON.parse(storagePreferences);

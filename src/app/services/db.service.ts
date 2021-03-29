@@ -8,12 +8,22 @@ import { ProductInterface } from '../util/interface/ProductInterface';
 })
 export class DbService {
 
-  private dbInstance: SQLiteObject;
+  public dbInstance: SQLiteObject;
 
   constructor(private sqlite: SQLite) { }
 
   async getDB() {
-    return this.sqlite.create({ name: 'data.db', location: 'default' });
+    return
+  }
+
+  async createDatabase(){
+    try{
+      this.dbInstance = await this.sqlite.create({ name: 'to_buy.db', location: 'default' });
+      // if create the database
+      this.createTables(this.dbInstance);
+    }catch(error){
+      console.error("An error occurred while trying to create database.");
+    }
   }
 
   createTables(dbInstance: SQLiteObject) {
@@ -26,8 +36,8 @@ export class DbService {
     dbInstance.executeSql('CREATE TABLE IF NOT EXISTS '
       + 'ITEMS(id INTEGER PRIMARY KEY AUTOINCREMENT,'
       + ' name VARCHAR(15), description VARCHAR(50),'
-      + ' qtd INTEGER(3), value INTEGER(6),'
-      + ' id_cart INTEGER)', [])
+      + ' qtd INTEGER(3), value INTEGER(6), in_cart INTEGER(1)'
+      + ' id_cart INTEGER, FOREIGN KEY(id_cart) REFERENCES CARTS(id))', [])
       .catch(e => console.log(e));
 
     dbInstance.executeSql('CREATE TABLE IF NOT EXISTS '

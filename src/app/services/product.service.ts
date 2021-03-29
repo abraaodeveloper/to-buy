@@ -14,19 +14,15 @@ import { ProductInterface } from '../util/interface/ProductInterface';
 })
 export class ProductService implements CRUDInterface {
 
-  private dbInstance: SQLiteObject = null;
   private toasts: Toast;
 
-  constructor(private instance: DbService, private toastController: ToastController) {
+  constructor(private dbService: DbService, private toastController: ToastController) {
     this.toasts = new Toast(toastController);
-    instance.getDB().then(db => {
-      this.dbInstance = db;
-    }).catch(e => console.log(e))
   }
 
   create(product: ProductInterface) {
-    this.dbInstance.executeSql('insert into ITEMS(name, description, qtd, value, id_cart) VALUES(?, ?, ?, ?, ?)',
-      [product.name, product.description, product.qtd, product.value, product.idCart])
+    this.dbService.dbInstance.executeSql('insert into ITEMS(name, description, qtd, value, inCart, id_cart) VALUES(?, ?, ?, ?, ?, ?)',
+      [product.name, product.description, product.qtd, product.value, product.inCart, product.idCart])
       .catch(e => {
         this.toasts.info("an error has occurred");
         return false;
@@ -36,7 +32,7 @@ export class ProductService implements CRUDInterface {
 
   getAllByCartId(idCart: number): ProductInterface[] {
     let products: ProductInterface[] = [];
-    this.dbInstance.executeSql('select * from ITEMS WHERE id_cart=?', [idCart]).then(
+    this.dbService.dbInstance.executeSql('select * from ITEMS WHERE id_cart=?', [idCart]).then(
       (res) => {
         for(var x=0; x<res.rows.length; x++)
           products.push(res.rows.item(x));
@@ -49,7 +45,7 @@ export class ProductService implements CRUDInterface {
 
   getById(id: number) {
     let cart: CartInterface[] = [];
-    this.dbInstance.executeSql('select * from ITEMS WHERE id=?', [id]).then(
+    this.dbService.dbInstance.executeSql('select * from ITEMS WHERE id=?', [id]).then(
       (res) => {
         for (var x = 0; x < res.rows.length; x++)
           cart.push(res.rows.item(x));
@@ -61,11 +57,12 @@ export class ProductService implements CRUDInterface {
   }
 
   update(product: ProductInterface) {
-    this.dbInstance.executeSql('UPDATE ITEMS SET ' +
+    this.dbService.dbInstance.executeSql('UPDATE ITEMS SET ' +
       'name=' + product.name + ', ' +
       'description=' + product.description + ', ' +
       'qtd=' + product.qtd + ', ' +
       'value=' + product.value +
+      'in_cart=' + product.inCart +
       ' WHERE ID=?', [product.id])
       .catch(e => {
         this.toasts.info("an error has occurred");
@@ -75,7 +72,7 @@ export class ProductService implements CRUDInterface {
   }
 
   deleteById(id: number) {
-    this.dbInstance.executeSql('DELETE FROM ITEMS WHERE ID=?', [id])
+    this.dbService.dbInstance.executeSql('DELETE FROM ITEMS WHERE ID=?', [id])
       .catch(e => {
         this.toasts.info("an error has occurred");
         return false;
